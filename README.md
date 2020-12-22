@@ -35,3 +35,5 @@ In Postman, create a new post request to the route /images/name, the name is the
 ## References
 [1] How to upload files in Node.js and Express (https://attacomsian.com/blog/uploading-files-nodejs-express)<br>
 [2] Express File Upload with Multer in Node.js (https://attacomsian.com/blog/express-file-upload-multer)<br>
+[3] React file upload: proper and easy way, with NodeJS! (https://programmingwithmosh.com/javascript/react-file-upload-proper-server-side-nodejs-easy/) <br>
+[4] How to upload files in React with NodeJS & Express (https://reactgo.com/react-file-upload/)<br>
