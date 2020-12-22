@@ -5,19 +5,72 @@
   See LICENSE.txt for more information
 */
 
-import { addImageDescriptor } from "./descriptor.js";
+import fs from "fs";
+import { addImageDescriptor, deleteImageDescriptor } from "./descriptor.js";
+
+function isImageFile(name) {
+  return name?.match(/\.(png|jpg|jpeg)$/);
+}
 
 /**
- * upload one or multiple images
+ * upload one image using binary type body
  * @param {*} req
  * @param {*} res
  */
-export function uploadImages(req, res) {
+export function uploadBinaryImage(req, res) {
+  try {
+    const name = req.params.name;
+    if (!isImageFile(name)) {
+      res.send({
+        status: "fail",
+        message: "image file must end with jpg|jpeg|png",
+      });
+      return;
+    }
+
+    let data = new Buffer("");
+    req.on("data", (chunk) => {
+      data = Buffer.concat([data, chunk]);
+    });
+    req.on("end", () => {
+      const descriptor = addImageDescriptor(name);
+      fs.writeFile(descriptor.path, data, "binary", (error) => {
+        if (error) {
+          res.status(500).send({
+            status: "fail",
+            error: error?.message,
+          });
+          deleteImageDescriptor(descriptor);
+        } else {
+          res.send({
+            status: "success",
+            message: "image uploaded",
+            id: descriptor.id,
+            name: descriptor.originalname,
+            url: descriptor.url,
+          });
+        }
+      });
+    });
+  } catch (error) {
+    res.status(500).send({
+      status: "fail",
+      error: error.message,
+    });
+  }
+}
+
+/**
+ * upload one or multiple images using form-data type body
+ * @param {*} req
+ * @param {*} res
+ */
+export function uploadFormImages(req, res) {
   try {
     if (!req.files) {
       res.send({
         status: "fail",
-        message: "No image uploaded",
+        message: "no image uploaded",
       });
     } else {
       const descriptors = [];
@@ -46,7 +99,7 @@ export function uploadImages(req, res) {
       if (descriptors.length === 0) {
         res.send({
           status: "fail",
-          message: "No image uploaded",
+          message: "no image uploaded",
         });
       } else if (descriptors.length === 1) {
         const descriptor = descriptors[0];

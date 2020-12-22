@@ -9,7 +9,7 @@ import config from "./config.js";
 import { getImageList } from "./src/controller/getImageList.js";
 import { downloadImage } from "./src/controller/downloadImage.js";
 import { deleteImage } from "./src/controller/deleteImage.js";
-import { uploadImages } from "./src/controller/uploadImages.js";
+import { uploadFormImages, uploadBinaryImage } from "./src/controller/uploadImages.js";
 
 export default function setup(app) {
   app.get("/help", (req, res) =>
@@ -25,5 +25,6 @@ export default function setup(app) {
   app.get("/images", getImageList);
   app.get("/images/:id", downloadImage);
   app.delete("/images/:id", deleteImage);
-  app.post("/images", uploadImages);
+  app.post("/images", uploadFormImages);
+  app.post("/images/:name", uploadBinaryImage);
 }
