@@ -7,6 +7,7 @@
 
 import cors from "cors";
 import express from "express";
+import fileUpload from "express-fileupload";
 import setupRoutes from "./routes.js";
 import config from "./config.js";
 
@@ -17,13 +18,23 @@ app.use(
   })
 );
 
+// enable files upload
+app.use(
+  fileUpload({
+    createParentPath: true,
+    limits: {
+      fileSize: config.maxImageSize,
+    },
+  })
+);
+
 app.use(express.urlencoded({ extended: true }));
+
 app.use((req, res, next) => {
   console.log(`received ${req.method} ${req.originalUrl}`);
   next();
 });
 setupRoutes(app);
-
 
 // start to listening
 const port = config.port;
