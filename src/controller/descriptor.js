@@ -14,6 +14,7 @@
 
 import shortid from "shortid";
 import fs from "fs";
+import imageThumbnail from "image-thumbnail";
 import config from "../../config.js";
 
 const imageDescriptors = new Map(); // map(id, { id, originalname, path, url })
@@ -93,7 +94,57 @@ export function deleteImageDescriptor(id) {
   if (id && imageDescriptors.has(id)) {
     const descriptor = imageDescriptors.get(id);
     imageDescriptors.delete(id);
+    deleteImageThumbnail(descriptor);
+
+    // delete the generated image thumbnail if exists
+    const thumbnailPath = getImageThumbnialPath(descriptor);
+    fs.unlink(
+      thumbnailPath,
+      (error = {
+        if(error) {
+          console.log(error);
+        },
+      })
+    );
     return descriptor;
+  }
+}
+
+
+/**
+ * a thumbnail has the same file extension as the original image file
+ * @param {} descriptor 
+ */
+function getImageThumbnialPath(descriptor) {
+  const { id, path } = descriptor;
+  const index = path.lastIndexOf(".");
+  if(index !== -1) {
+    return `${config.getImageFileFolder()}/thumbnail-${id}${path.substr(index)}`;
+  } else {
+    return `${config.getImageFileFolder()}/thumbnail-${id}.jpg`;
+  }
+}
+
+/**
+ * generate an image's thumbnail, return the generated image thumbnial file path
+ * @param {*} descriptor
+ */
+export async function generateImageThumbnail(descriptor) {
+  try {
+    const thumbnailPath = getImageThumbnialPath(descriptor);
+    if (fs.existsSync(thumbnailPath)) {
+      // return an already generated image thumbnail
+      return thumbnailPath;
+    }
+
+    // generate image thumbnail on-the-fly
+    const thumbnail = await imageThumbnail(descriptor.path);
+    fs.appendFileSync(thumbnailPath, Buffer.from(thumbnail));
+    return thumbnailPath;
+  } catch (err) {
+    console.error(err);
+    // return an image placeholder if failed to generate a thumbnail
+    return `${config.getImagePlaceholder()}`;
   }
 }
 

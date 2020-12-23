@@ -16,7 +16,7 @@ export default function setup(app) {
     res.send({
       getList: "GET /images",
       upload: "POST /images",
-      get: "GET /images/:id",
+      get: "GET /images/:id[?type=original|thumbnail]",
       delete: "DELETE /images:id",
     })
   );

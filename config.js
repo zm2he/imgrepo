@@ -27,6 +27,10 @@ const config = {
   getImageFileFolder() {
     return this.appFolder + "/images";
   },
+
+  getImagePlaceholder() {
+    return this.appFolder + '/public/image-placeholder.png'
+  }
 };
 
 config.appFolder = process.cwd();
