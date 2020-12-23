@@ -29,6 +29,10 @@ function scanImages(directoryPath) {
       return;
     }
     files.forEach((file) => {
+      // skip thumbnail file
+      if(file.startsWith('thumbnail-')) {
+        return;
+      }
       // parse file name, and discard invalid file
       const index = file.indexOf("-");
       if (index === -1) {
@@ -94,32 +98,29 @@ export function deleteImageDescriptor(id) {
   if (id && imageDescriptors.has(id)) {
     const descriptor = imageDescriptors.get(id);
     imageDescriptors.delete(id);
-    deleteImageThumbnail(descriptor);
 
     // delete the generated image thumbnail if exists
     const thumbnailPath = getImageThumbnialPath(descriptor);
-    fs.unlink(
-      thumbnailPath,
-      (error = {
-        if(error) {
-          console.log(error);
-        },
-      })
-    );
+    fs.unlink(thumbnailPath, (error) => {
+      if (error) {
+        console.log(error);
+      }
+    });
     return descriptor;
   }
 }
 
-
 /**
  * a thumbnail has the same file extension as the original image file
- * @param {} descriptor 
+ * @param {} descriptor
  */
 function getImageThumbnialPath(descriptor) {
   const { id, path } = descriptor;
   const index = path.lastIndexOf(".");
-  if(index !== -1) {
-    return `${config.getImageFileFolder()}/thumbnail-${id}${path.substr(index)}`;
+  if (index !== -1) {
+    return `${config.getImageFileFolder()}/thumbnail-${id}${path.substr(
+      index
+    )}`;
   } else {
     return `${config.getImageFileFolder()}/thumbnail-${id}.jpg`;
   }
