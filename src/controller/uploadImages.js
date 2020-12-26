@@ -23,6 +23,7 @@ export function uploadBinaryImage(req, res) {
     if (!isImageFile(name)) {
       res.send({
         status: "fail",
+        originalUrl: req.originalUrl,
         message: "image file must end with jpg|jpeg|png",
       });
       return;
@@ -38,6 +39,7 @@ export function uploadBinaryImage(req, res) {
         if (error) {
           res.status(500).send({
             status: "fail",
+            originalUrl: req.originalUrl,
             error: error?.message,
           });
           deleteImageDescriptor(descriptor);
@@ -45,6 +47,7 @@ export function uploadBinaryImage(req, res) {
           res.send({
             status: "success",
             message: "image uploaded",
+            originalUrl: req.originalUrl,
             id: descriptor.id,
             name: descriptor.originalname,
             url: descriptor.url,
@@ -55,6 +58,7 @@ export function uploadBinaryImage(req, res) {
   } catch (error) {
     res.status(500).send({
       status: "fail",
+      originalUrl: req.originalUrl,
       error: error.message,
     });
   }
@@ -70,6 +74,7 @@ export function uploadFormImages(req, res) {
     if (!req.files) {
       res.send({
         status: "fail",
+        originalUrl: req.originalUrl,
         message: "no image uploaded",
       });
     } else {
@@ -99,12 +104,14 @@ export function uploadFormImages(req, res) {
       if (descriptors.length === 0) {
         res.send({
           status: "fail",
+          originalUrl: req.originalUrl,
           message: "no image uploaded",
         });
       } else if (descriptors.length === 1) {
         const descriptor = descriptors[0];
         res.send({
           status: "success",
+          originalUrl: req.originalUrl,
           message: "image uploaded",
           id: descriptor.id,
           name: descriptor.originalname,
@@ -113,6 +120,7 @@ export function uploadFormImages(req, res) {
       } else {
         res.send({
           status: "success",
+          originalUrl: req.originalUrl,
           message: "images uploaded",
           images: descriptors.map((descriptor) => ({
             id: descriptor.id,
@@ -125,6 +133,7 @@ export function uploadFormImages(req, res) {
   } catch (error) {
     res.status(500).send({
       status: "fail",
+      originalUrl: req.originalUrl,
       error: error.message,
     });
   }

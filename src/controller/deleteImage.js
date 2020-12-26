@@ -17,7 +17,13 @@ export function deleteImage(req, res) {
   const id = req.params.id;
   const descriptor = getImageDescriptor(id);
   if (!descriptor) {
-    res.status(404).send({ status: "fail", id, message: "Image not found" });
+    res
+      .status(404)
+      .send({
+        status: "fail",
+        originalUrl: req.originalUrl,
+        message: "Image not found",
+      });
     return;
   }
 
@@ -26,7 +32,7 @@ export function deleteImage(req, res) {
       console.error(error);
       res.status(500).send({
         status: "fail",
-        id,
+        originalUrl: req.originalUrl,
         message: "Could not delete the image. " + error,
       });
       return;
@@ -37,8 +43,9 @@ export function deleteImage(req, res) {
 
     res.send({
       status: "success",
-      id: id,
+      originalUrl: req.originalUrl,
       name: descriptor.originalname,
+      message: "image deleted",
     });
   });
 }

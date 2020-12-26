@@ -16,12 +16,24 @@ export async function downloadImage(req, res) {
   const id = req.params.id;
   const descriptor = getImageDescriptor(id);
   if (!descriptor) {
-    res.status(404).send({ status: "fail", id, message: "image not found" });
+    res
+      .status(404)
+      .send({
+        status: "fail",
+        originalUrl: req.originalUrl,
+        message: "image not found",
+      });
     return;
   }
-  const type = req.query?.type || 'original';
-  if(type !== 'original' && type !== 'thumbnail') {
-    res.status(400).send({ status: "fail", id, message: "bad request, type must be either original or thumbnail" });
+  const type = req.query?.type || "original";
+  if (type !== "original" && type !== "thumbnail") {
+    res
+      .status(400)
+      .send({
+        status: "fail",
+        originalUrl: req.originalUrl,
+        message: "bad request, type must be either original or thumbnail",
+      });
     return;
   }
 
@@ -33,14 +45,14 @@ export async function downloadImage(req, res) {
   }
 
   let filepath = path;
-  if(type === 'thumbnail') {
-      filepath = await generateImageThumbnail(descriptor);
+  if (type === "thumbnail") {
+    filepath = await generateImageThumbnail(descriptor);
   }
   res.download(filepath, originalname, (err) => {
     if (err) {
       res.status(500).send({
         status: "fail",
-        id,
+        originalUrl: req.originalUrl,
         message: "Could not download the file. " + err,
       });
     }

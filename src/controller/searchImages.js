@@ -15,7 +15,13 @@ import { getAllImageDescriptors } from "./descriptor.js";
 export function searchImages(req, res) {
   let q = req.query.q;
   if (!q) {
-    res.status(404).send({ status: "fail", id, message: "bad request" });
+    res
+      .status(404)
+      .send({
+        status: "fail",
+        originalUrl: req.originalUrl,
+        message: "bad request, parameter q not specified",
+      });
     return;
   }
 
@@ -30,5 +36,9 @@ export function searchImages(req, res) {
       name: descriptor.originalname,
       url: descriptor.url,
     }));
-  res.status(200).send(searchResults);
+  res.status(200).send({
+    status: "success",
+    originalUrl: req.originalUrl,
+    result: searchResults,
+  });
 }
