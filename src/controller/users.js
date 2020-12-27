@@ -15,9 +15,9 @@ import Crypto from "crypto-js";
 import config from "../../config.js";
 
 /**
- * users maps an email to user object { email, pwdHash }
+ * users contains all signed email IDs
  */
-const users = new Map();
+const users = new Set();
 
 /**
  * calculate hash value, pls note the function uses MD5 but can change to any other stronger algorithem such as SHA256 instead
@@ -39,19 +39,27 @@ function scanUsers(directoryPath) {
     }
 
     files.forEach((file) => {
-      // validate file name, must be: user-xxxx.json
-      if (!file.startsWith("user-") || !file.endsWith(".json")) {
+      // validate file name, must be: user-id.json
+      const prefix = "user-";
+      const suffix = ".json";
+      if (!file.startsWith(prefix) || !file.endsWith(suffix)) {
         return;
       }
       try {
-        const content = fs.readFileSync(`${directoryPath}/${file}`, "utf8");
-        const user = JSON.parse(content);
-        users.set(user.email, user);
+        const id = file.substr(
+          prefix.length,
+          file.length - prefix.length - suffix.length
+        );
+        users.add(id);
       } catch (error) {
         console.log(error);
       }
     });
   });
+}
+
+function getUserId(email, password) {
+  return hash(email.toLowerCase() + password);
 }
 
 export function signup(req, res) {
@@ -65,28 +73,40 @@ export function signup(req, res) {
     return;
   }
 
-  const lowerCasedEmail = email.toLowerCase();
-  if (users.has(email)) {
+  const id = getUserId(email, password);
+  if (users.has(id)) {
     res.status(400).send({
       status: "fail",
+      id,
       originalUrl: req.originalUrl,
       message: "user already signed up",
     });
     return;
   }
 
-  const user = {
-    email: lowerCasedEmail,
-    pwdHash: hash(password),
-  };
-  const path = `${config.getDataFolder()}/user-${lowerCasedEmail}.json`;
-  fs.writeFileSync(path, JSON.stringify(user));
-  users.set(lowerCasedEmail, user);
+  try {
+    const user = {
+      id,
+      email,
+      pwdHash: hash(password),
+      created: Date.now(),
+    };
+    const path = `${config.getDataFolder()}/user-${id}.json`;
+    fs.writeFileSync(path, JSON.stringify(user));
+    users.add(id);
 
-  res.send({
-    status: "success",
-    originalUrl: req.originalUrl,
-  });
+    res.send({
+      status: "success",
+      id,
+      originalUrl: req.originalUrl,
+    });
+  } catch (error) {
+    res.status(500).send({
+      status: "fail",
+      originalUrl: req.originalUrl,
+      message: error,
+    });
+  }
 }
 
 /**
@@ -96,10 +116,8 @@ export function signup(req, res) {
  */
 export function validateReq(req, res) {
   const user = getUser(req);
-  if (user && users.has(user.email)) {
-    if (users.get(user.email).pwdHash === hash(user.password)) {
-      return true;
-    }
+  if (user && users.has(user.id)) {
+    return true;
   }
   res.status(401).send({
     status: "fail",
@@ -112,10 +130,9 @@ export function validateReq(req, res) {
 export function getUser(req) {
   const { email, password } = req.headers;
   if (email && password) {
-    const lowerCasedEmail = email.trim().toLowerCase();
     return {
-      id: hash(email),
-      email: lowerCasedEmail,
+      id: getUserId(email, password),
+      email,
       password,
     };
   }
