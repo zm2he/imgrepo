@@ -35,7 +35,7 @@ export function uploadBinaryImage(req, res) {
       data = Buffer.concat([data, chunk]);
     });
     req.on("end", () => {
-      const descriptor = addImageDescriptor(getUse(req), name);
+      const descriptor = addImageDescriptor(getUse(req), name, req.query.type);
       fs.writeFile(descriptor.path, data, "binary", (error) => {
         if (error) {
           res.status(500).send({
@@ -95,7 +95,7 @@ export function uploadFormImages(req, res) {
           return;
         }
 
-        const descriptor = addImageDescriptor(getUser(req), name);
+        const descriptor = addImageDescriptor(getUser(req), name, req.query.type);
         //Use the mv() method to place the image in dest directory (i.e. "/data" folder)
         img.mv(descriptor.path);
         descriptors.push(descriptor);

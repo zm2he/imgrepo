@@ -127,13 +127,17 @@ export function getUser(req) {
  * @param {*} id
  */
 export function isImageDownloadable(user, id) {
-  return id?.startsWith(user.id);
+  return (
+    id?.endsWith("$") || // is it a public image?
+    id?.startsWith(user.id)
+  ); // is it a user uploaded image?
 }
 
 /**
  * check whether the user has permission to delete the image
  */
 export function isImageDeletable(user, id) {
+  // only the user who uploaded the image can delete the image
   return id?.startsWith(user.id);
 }
 

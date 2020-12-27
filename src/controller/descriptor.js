@@ -71,9 +71,9 @@ export function getAllImageDescriptors() {
  * @param {*} user
  * @param {*} originalname
  */
-export function addImageDescriptor(user, originalname) {
+export function addImageDescriptor(user, originalname, type='private') {
   if (user && originalname) {
-    const id = `${user.id}${shortid.generate()}`;
+    const id = `${user.id}${shortid.generate()}${type==='public'? '$':''}`;
     const descriptor = {
       id,
       originalname,

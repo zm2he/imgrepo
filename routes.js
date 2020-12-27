@@ -21,7 +21,7 @@ export default function setup(app) {
       signup: "POST /signup",
       getList: "GET /images",
       search: "GET /images/search?q=x",
-      upload: "POST /images",
+      upload: "POST /images[?type=public|private]",
       get: "GET /images/:id[?type=original|thumbnail]",
       delete: "DELETE /images:id",
     })
