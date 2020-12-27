@@ -23,6 +23,10 @@ const config = {
   // maximum allowed image size, 10m by default
   maxImageSize: process.env.IMGREPO_MAX_IMG_SIZE || 10 * 1024 * 1024,
 
+  getUserFileFolder() {
+    return this.appFolder + "/users";
+  },
+  
   // images are saved to local sub-folder /images
   getImageFileFolder() {
     return this.appFolder + "/images";
