@@ -11,7 +11,7 @@
  *     IMGREPO_MAX_IMG_SIZE - maximum allowed image size in bytes, maximum is 10m
  */
 
-const port = process.env.IMGREPO_PORT || 8080;
+const port = process.env.IMGREPO_PORT || 80;
 const config = {
   version: "1.0.201219",
 
