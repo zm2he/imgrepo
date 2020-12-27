@@ -6,6 +6,7 @@
 */
 
 import { generateImageThumbnail, getImageDescriptor } from "./descriptor.js";
+import { getUser } from './users.js';
 
 /**
  * download an image by the specified id, the req url is in format of .../images/:id
@@ -14,7 +15,7 @@ import { generateImageThumbnail, getImageDescriptor } from "./descriptor.js";
  */
 export async function downloadImage(req, res) {
   const id = req.params.id;
-  const descriptor = getImageDescriptor(id);
+  const descriptor = getImageDescriptor(getUser(req), id);
   if (!descriptor) {
     res
       .status(404)
@@ -22,6 +23,16 @@ export async function downloadImage(req, res) {
         status: "fail",
         originalUrl: req.originalUrl,
         message: "image not found",
+      });
+    return;
+  }
+  if(!descriptor.downloadable) {
+    res
+      .status(401)
+      .send({
+        status: "fail",
+        originalUrl: req.originalUrl,
+        message: "you have no permission to download the image",
       });
     return;
   }

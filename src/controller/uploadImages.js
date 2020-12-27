@@ -7,6 +7,7 @@
 
 import fs from "fs";
 import { addImageDescriptor, deleteImageDescriptor } from "./descriptor.js";
+import { getUser } from './users.js'
 
 function isImageFile(name) {
   return name?.match(/\.(png|jpg|jpeg)$/);
@@ -34,7 +35,7 @@ export function uploadBinaryImage(req, res) {
       data = Buffer.concat([data, chunk]);
     });
     req.on("end", () => {
-      const descriptor = addImageDescriptor(name);
+      const descriptor = addImageDescriptor(getUse(req), name);
       fs.writeFile(descriptor.path, data, "binary", (error) => {
         if (error) {
           res.status(500).send({
@@ -94,8 +95,8 @@ export function uploadFormImages(req, res) {
           return;
         }
 
-        const descriptor = addImageDescriptor(name);
-        //Use the mv() method to place the image in dest directory (i.e. "/images" folder)
+        const descriptor = addImageDescriptor(getUser(req), name);
+        //Use the mv() method to place the image in dest directory (i.e. "/data" folder)
         img.mv(descriptor.path);
         descriptors.push(descriptor);
       });

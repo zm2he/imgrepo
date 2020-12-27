@@ -79,7 +79,7 @@ export function signup(req, res) {
     email: lowerCasedEmail,
     pwdHash: hash(password),
   };
-  const path = `${config.getUserFileFolder()}/user-${lowerCasedEmail}.json`;
+  const path = `${config.getDataFolder()}/user-${lowerCasedEmail}.json`;
   fs.writeFileSync(path, JSON.stringify(user));
   users.set(lowerCasedEmail, user);
 
@@ -95,14 +95,10 @@ export function signup(req, res) {
  * @param {*} res
  */
 export function validateReq(req, res) {
-  const { email, password } = req.headers;
-  if (email && password) {
-    const lowerCasedEmail = email.trim().toLowerCase();
-    if (users.has(lowerCasedEmail)) {
-      const user = users.get(lowerCasedEmail);
-      if (user.pwdHash === hash(password)) {
-        return true;
-      }
+  const user = getUser(req);
+  if (user && users.has(user.email)) {
+    if (users.get(user.email).pwdHash === hash(user.password)) {
+      return true;
     }
   }
   res.status(401).send({
@@ -113,5 +109,33 @@ export function validateReq(req, res) {
   return false;
 }
 
+export function getUser(req) {
+  const { email, password } = req.headers;
+  if (email && password) {
+    const lowerCasedEmail = email.trim().toLowerCase();
+    return {
+      id: hash(email),
+      email: lowerCasedEmail,
+      password,
+    };
+  }
+}
+
+/**
+ * check whether the user has permission to download the image
+ * @param {*} user
+ * @param {*} id
+ */
+export function isImageDownloadable(user, id) {
+  return id?.startsWith(user.id);
+}
+
+/**
+ * check whether the user has permission to delete the image
+ */
+export function isImageDeletable(user, id) {
+  return id?.startsWith(user.id);
+}
+
 // load users from file to memory
-scanUsers(config.getUserFileFolder());
+scanUsers(config.getDataFolder());

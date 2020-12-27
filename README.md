@@ -69,6 +69,21 @@ All images are saved in sub-folder /images<br>
 By default the server listens on port number 8080, or whatever specified in environment variable IMGREPO_PORT<br>
 By default the server allows image size up to 10 mega bytes, or the value specified in environment variable: IMGREPO_MAX_IMG_SIZE<br>
 <br><br>
+
+## Data folder
+The project utilizes local disk folder for saving data which include<br>
+```
+Signed user files:  user-id.json
+Uploaded image files: img-id-orignalfilename
+Thumbnial image files: thumbnail-id.filextension
+```
+
+It should be pretty straight forward to migrate disk-folder implementation to database if needed<br><br>
+
+## Id
+A user id is just a signed user's email (which is unique)<br>
+An image id is concatenating of hash(user.email) and a dynamically auto-generated short unique id.<br><br>
+
 ##  Upload images from Postman
 ### form-data type body
 In Postman, create a new post request to the route /images; click on the "form-data", then add "images" as a key and you will see a hidden drop-down at the right of the key field which says Text as default,  change the type from text to file and choose one or multiple image files to upload.<br>

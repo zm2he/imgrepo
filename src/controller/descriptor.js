@@ -16,8 +16,12 @@ import shortid from "shortid";
 import fs from "fs";
 import imageThumbnail from "image-thumbnail";
 import config from "../../config.js";
+import { isImageDownloadable, isImageDeletable } from "./users.js";
 
-const imageDescriptors = new Map(); // map(id, { id, originalname, path, url })
+/**
+ * imageDescriptors maps an image id to an object { id, originalname, path, url }
+ */
+const imageDescriptors = new Map();
 
 /**
  * scan the specified folder to load images' descriptors into memory cache
@@ -29,18 +33,17 @@ function scanImages(directoryPath) {
       return;
     }
     files.forEach((file) => {
-      // skip thumbnail file
-      if(file.startsWith('thumbnail-')) {
+      if (!file.startsWith("img-")) {
         return;
       }
       // parse file name, and discard invalid file
-      const index = file.indexOf("-");
+      const index = file.indexOf("-", "img-".length);
       if (index === -1) {
         return;
       }
-      const id = file.substr(0, index);
+      const id = file.substr("img-".length, index);
       const originalname = file.substr(index + 1);
-      if (!shortid.isValid(id) || !originalname) {
+      if (!originalname) {
         return;
       }
 
@@ -65,15 +68,16 @@ export function getAllImageDescriptors() {
 
 /**
  * add a new image descriptor, the image's id is auto-generated
+ * @param {*} user
  * @param {*} originalname
  */
-export function addImageDescriptor(originalname) {
-  if (originalname) {
-    const id = shortid.generate();
+export function addImageDescriptor(user, originalname) {
+  if (user && originalname) {
+    const id = `${user.id}${shortid.generate()}`;
     const descriptor = {
       id,
       originalname,
-      path: `${config.getImageFileFolder()}/${id}-${originalname}`,
+      path: `${config.getDataFolder()}/img-${id}-${originalname}`,
       url: `${config.baseUrl}/images/${id}`,
     };
     imageDescriptors.set(id, descriptor);
@@ -84,9 +88,14 @@ export function addImageDescriptor(originalname) {
 /***
  * get an image's descriptor by id
  */
-export function getImageDescriptor(id) {
+export function getImageDescriptor(user, id) {
   if (id && imageDescriptors.has(id)) {
-    return imageDescriptors.get(id);
+    const descriptor = imageDescriptors.get(id);
+    return {
+      ...descriptor,
+      downloadable: isImageDownloadable(user, id),
+      deletable: isImageDeletable(user, id),
+    };
   }
 }
 
@@ -118,11 +127,9 @@ function getImageThumbnialPath(descriptor) {
   const { id, path } = descriptor;
   const index = path.lastIndexOf(".");
   if (index !== -1) {
-    return `${config.getImageFileFolder()}/thumbnail-${id}${path.substr(
-      index
-    )}`;
+    return `${config.getDataFolder()}/thumbnail-${id}${path.substr(index)}`;
   } else {
-    return `${config.getImageFileFolder()}/thumbnail-${id}.jpg`;
+    return `${config.getDataFolder()}/thumbnail-${id}.jpg`;
   }
 }
 
@@ -149,4 +156,4 @@ export async function generateImageThumbnail(descriptor) {
   }
 }
 
-scanImages(config.getImageFileFolder());
+scanImages(config.getDataFolder());

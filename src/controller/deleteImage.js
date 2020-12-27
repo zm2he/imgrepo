@@ -7,6 +7,7 @@
 
 import fs from "fs";
 import { deleteImageDescriptor, getImageDescriptor } from "./descriptor.js";
+import { getUser } from './users.js';
 
 /**
  * delete an image by the specified id, the req url is in format of .../images/:id
@@ -15,7 +16,7 @@ import { deleteImageDescriptor, getImageDescriptor } from "./descriptor.js";
  */
 export function deleteImage(req, res) {
   const id = req.params.id;
-  const descriptor = getImageDescriptor(id);
+  const descriptor = getImageDescriptor(getUser(req), id);
   if (!descriptor) {
     res
       .status(404)
@@ -23,6 +24,16 @@ export function deleteImage(req, res) {
         status: "fail",
         originalUrl: req.originalUrl,
         message: "Image not found",
+      });
+    return;
+  }
+  if(!descriptor.deletable) {
+    res
+      .status(401)
+      .send({
+        status: "fail",
+        originalUrl: req.originalUrl,
+        message: "you have no permission to delete the image",
       });
     return;
   }
