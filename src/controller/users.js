@@ -104,7 +104,7 @@ export function signup(req, res) {
     res.status(500).send({
       status: "fail",
       originalUrl: req.originalUrl,
-      message: error,
+      error: error.message,
     });
   }
 }

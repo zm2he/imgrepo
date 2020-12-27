@@ -7,7 +7,7 @@
 
 import fs from "fs";
 import { addImageDescriptor, deleteImageDescriptor } from "./descriptor.js";
-import { getUser } from './users.js'
+import { getUser } from "./users.js";
 
 function isImageFile(name) {
   return name?.match(/\.(png|jpg|jpeg)$/);
@@ -71,71 +71,64 @@ export function uploadBinaryImage(req, res) {
  * @param {*} res
  */
 export function uploadFormImages(req, res) {
-  try {
-    if (!req.files) {
-      res.send({
-        status: "fail",
-        originalUrl: req.originalUrl,
-        message: "no image uploaded",
-      });
-    } else {
-      const descriptors = [];
-      let images = req.files.images || req.files.image;
-      if (!Array.isArray(images)) {
-        images = [images];
-      }
-      images.forEach((img) => {
-        const { name, mimetype, size } = img;
-        if (!mimetype.startsWith("image/")) {
-          console.log(`discarded a non-image file: ${name}`);
-          return;
-        }
-        if (!size) {
-          console.log(`discarded a zero-length image file: ${name}`);
-          return;
-        }
-
-        const descriptor = addImageDescriptor(getUser(req), name, req.query.type);
-        //Use the mv() method to place the image in dest directory (i.e. "/data" folder)
-        img.mv(descriptor.path);
-        descriptors.push(descriptor);
-      });
-
-      //send response
-      if (descriptors.length === 0) {
-        res.send({
-          status: "fail",
-          originalUrl: req.originalUrl,
-          message: "no image uploaded",
-        });
-      } else if (descriptors.length === 1) {
-        const descriptor = descriptors[0];
-        res.send({
-          status: "success",
-          originalUrl: req.originalUrl,
-          message: "image uploaded",
-          id: descriptor.id,
-          name: descriptor.originalname,
-          url: descriptor.url,
-        });
-      } else {
-        res.send({
-          status: "success",
-          originalUrl: req.originalUrl,
-          message: "images uploaded",
-          images: descriptors.map((descriptor) => ({
-            id: descriptor.id,
-            name: descriptor.originalname,
-            url: descriptor.url,
-          })),
-        });
-      }
-    }
-  } catch (error) {
-    res.status(500).send({
+  if (!req.files) {
+    res.send({
       status: "fail",
       originalUrl: req.originalUrl,
-      error: error.message,
+      message: "no image uploaded",
+    });
+    return;
+  }
+
+  const descriptors = [];
+  let images = req.files.images || req.files.image;
+  if (!Array.isArray(images)) {
+    images = [images];
+  }
+  images.forEach((img) => {
+    const { name, mimetype, size } = img;
+    if (!mimetype.startsWith("image/")) {
+      console.log(`discarded a non-image file: ${name}`);
+      return;
+    }
+    if (!size) {
+      console.log(`discarded a zero-length image file: ${name}`);
+      return;
+    }
+
+    const descriptor = addImageDescriptor(getUser(req), name, req.query.type);
+    //Use the mv() method to place the image in dest directory (i.e. "/data" folder)
+    img.mv(descriptor.path);
+    descriptors.push(descriptor);
+  });
+
+  //send response
+  if (descriptors.length === 0) {
+    res.send({
+      status: "fail",
+      originalUrl: req.originalUrl,
+      message: "no image uploaded",
+    });
+  } else if (descriptors.length === 1) {
+    const descriptor = descriptors[0];
+    res.send({
+      status: "success",
+      originalUrl: req.originalUrl,
+      message: "image uploaded",
+      id: descriptor.id,
+      name: descriptor.originalname,
+      url: descriptor.url,
+    });
+  } else {
+    res.send({
+      status: "success",
+      originalUrl: req.originalUrl,
+      message: "images uploaded",
+      images: descriptors.map((descriptor) => ({
+        id: descriptor.id,
+        name: descriptor.originalname,
+        url: descriptor.url,
+      })),
     });
   }
 }

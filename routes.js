@@ -15,6 +15,21 @@ import {
 } from "./src/controller/uploadImages.js";
 import { searchImages } from "./src/controller/searchImages.js";
 
+/** */
+function validateUserAndExecute(req, res, action) {
+  try {
+    if (validateReq(req, res)) {
+      action(req, res);
+    }
+  } catch (error) {
+    res.status(500).send({
+      status: "fail",
+      originalUrl: req.originalUrl,
+      error: error.message,
+    });
+  }
+}
+
 export default function setup(app) {
   app.get("/help", (req, res) =>
     res.send({
@@ -27,39 +42,26 @@ export default function setup(app) {
     })
   );
 
-  app.post("/signup", signup),
-    app.get("/images", (req, res) => {
-      if (validateReq(req, res)) {
-        getImageList(req, res);
-      }
-    });
-
-  app.get("/images/:id", (req, res) => {
-    if (validateReq(req, res)) {
-      const id = req.params.id;
-      if (id === "search") {
+  app.post("/signup", signup);
+  app.get("/images/:id", (req, res) =>
+    validateUserAndExecute(req, res, (req, res) => {
+      if (req.params.id === "search") {
         searchImages(req, res);
       } else {
         downloadImage(req, res);
       }
-    }
-  });
-
-  app.delete("/images/:id", (req, res) => {
-    if (validateReq(req, res)) {
-      deleteImage(req, res);
-    }
-  });
-
-  app.post("/images", (req, res) => {
-    if (validateReq(req, res)) {
-      uploadFormImages(req, res);
-    }
-  });
-
-  app.post("/images/:name", (req, res) => {
-    if (validateReq(req, res)) {
-      uploadBinaryImage(req, res);
-    }
-  });
+    })
+  );
+  app.get("/images", (req, res) =>
+    validateUserAndExecute(req, res, getImageList)
+  );
+  app.delete("/images/:id", (req, res) =>
+    validateUserAndExecute(req, res, deleteImage)
+  );
+  app.post("/images", (req, res) =>
+    validateUserAndExecute(req, res, uploadFormImages)
+  );
+  app.post("/images/:name", (req, res) =>
+    validateUserAndExecute(req, res, uploadBinaryImage)
+  );
 }
