@@ -8,7 +8,7 @@
 import cors from "cors";
 import express from "express";
 import fileUpload from "express-fileupload";
-import setupRoutes from "./routes.js";
+import { setupRoutes, setupSwagger } from "./routes.js";
 import config from "./config.js";
 
 const app = express();
@@ -36,6 +36,7 @@ app.use((req, res, next) => {
   next();
 });
 setupRoutes(app);
+setupSwagger(app);
 
 // start to listening
 const port = config.port;

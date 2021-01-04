@@ -5,6 +5,9 @@
   See LICENSE.txt for more information
 */
 
+import fs from "fs";
+import swaggerUI from "swagger-ui-express";
+import config from './config.js';
 import { signup, validateReq } from "./src/controller/users.js";
 import { getImageList } from "./src/controller/getImageList.js";
 import { downloadImage } from "./src/controller/downloadImage.js";
@@ -30,9 +33,38 @@ function validateUserAndExecute(req, res, action) {
   }
 }
 
-export default function setup(app) {
+const swagger = JSON.parse(fs.readFileSync(`${config.appFolder}/swagger.json`));
+export function setupSwagger(app) {
+  const baseUrl = config.baseUrl;
+  const index = baseUrl.indexOf("://");
+  if (index !== -1) {
+    swagger.info.version = config.version;
+    swagger.host = baseUrl.substr(index + 3);
+    swagger.schemes = [baseUrl.substr(0, index)];
+  }
+  app.use(
+    "/api-docs",
+    swaggerUI.serve,
+    swaggerUI.setup(swagger, {
+      explorer: false,
+      swaggerOptions: {
+        urls: [
+          {
+            url: baseUrl,
+            name: "doc",
+          },
+        ],
+      },
+    })
+  );
+}
+
+export function setupRoutes(app) {
+  app.get("/", (req, res) => res.json(swagger));
+
   app.get("/help", (req, res) =>
     res.send({
+      swagger: "GET /api-docs",
       signup: "POST /signup",
       getList: "GET /images",
       search: "GET /images/search?q=x",
