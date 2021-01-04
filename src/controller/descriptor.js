@@ -15,7 +15,7 @@
 import shortid from "shortid";
 import fs from "fs";
 import imageThumbnail from "image-thumbnail";
-import config from "../../config.js";
+import config, { ID_SEPARATOR, PUBLIC_INDICATOR } from "../../config.js";
 import { isImageDownloadable, isImageDeletable } from "./users.js";
 
 /**
@@ -32,16 +32,18 @@ function scanImages(directoryPath) {
     if (err) {
       return;
     }
+    const prefix = `img${ID_SEPARATOR}`
     files.forEach((file) => {
-      if (!file.startsWith("img-")) {
+
+      if (!file.startsWith(prefix)) {
         return;
       }
       // parse file name, and discard invalid file
-      const index = file.indexOf("-", "img-".length);
+      const index = file.indexOf(ID_SEPARATOR, prefix.length);
       if (index === -1) {
         return;
       }
-      const id = file.substr("img-".length, index);
+      const id = file.substr(prefix.length, index - prefix.length);
       const originalname = file.substr(index + 1);
       if (!originalname) {
         return;
@@ -73,11 +75,11 @@ export function getAllImageDescriptors() {
  */
 export function addImageDescriptor(user, originalname, type='private') {
   if (user && originalname) {
-    const id = `${user.id}${shortid.generate()}${type==='public'? '$':''}`;
+    const id = `${user.id}${shortid.generate()}${type==='public'? PUBLIC_INDICATOR:''}`;
     const descriptor = {
       id,
       originalname,
-      path: `${config.getDataFolder()}/img-${id}-${originalname}`,
+      path: `${config.getDataFolder()}/img${ID_SEPARATOR}${id}${ID_SEPARATOR}${originalname}`,
       url: `${config.baseUrl}/images/${id}`,
     };
     imageDescriptors.set(id, descriptor);
@@ -127,9 +129,9 @@ function getImageThumbnialPath(descriptor) {
   const { id, path } = descriptor;
   const index = path.lastIndexOf(".");
   if (index !== -1) {
-    return `${config.getDataFolder()}/thumbnail-${id}${path.substr(index)}`;
+    return `${config.getDataFolder()}/thumbnail${ID_SEPARATOR}${id}${path.substr(index)}`;
   } else {
-    return `${config.getDataFolder()}/thumbnail-${id}.jpg`;
+    return `${config.getDataFolder()}/thumbnail${ID_SEPARATOR}${id}.jpg`;
   }
 }
 

@@ -11,6 +11,9 @@
  *     IMGREPO_MAX_IMG_SIZE - maximum allowed image size in bytes, maximum is 10m
  */
 
+ export const ID_SEPARATOR = '$';
+ export const PUBLIC_INDICATOR = '+';
+ 
 const port = process.env.IMGREPO_PORT || 80;
 const config = {
   version: "1.0.201219",

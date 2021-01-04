@@ -12,7 +12,7 @@
 
 import fs from "fs";
 import Crypto from "crypto-js";
-import config from "../../config.js";
+import config, { ID_SEPARATOR, PUBLIC_INDICATOR } from "../../config.js";
 
 /**
  * users contains all signed email IDs
@@ -39,8 +39,8 @@ function scanUsers(directoryPath) {
     }
 
     files.forEach((file) => {
-      // validate file name, must be: user-id.json
-      const prefix = "user-";
+      // validate file name, must be: user$id.json
+      const prefix = `user${ID_SEPARATOR}`;
       const suffix = ".json";
       if (!file.startsWith(prefix) || !file.endsWith(suffix)) {
         return;
@@ -91,7 +91,7 @@ export function signup(req, res) {
       pwdHash: hash(password),
       created: Date.now(),
     };
-    const path = `${config.getDataFolder()}/user-${id}.json`;
+    const path = `${config.getDataFolder()}/user${ID_SEPARATOR}${id}.json`;
     fs.writeFileSync(path, JSON.stringify(user));
     users.add(id);
 
@@ -145,7 +145,7 @@ export function getUser(req) {
  */
 export function isImageDownloadable(user, id) {
   return (
-    id?.endsWith("$") || // is it a public image?
+    id?.endsWith(PUBLIC_INDICATOR) || // is it a public image?
     id?.startsWith(user.id)
   ); // is it a user uploaded image?
 }
