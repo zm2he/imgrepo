@@ -20,6 +20,11 @@ import config, { ID_SEPARATOR, PUBLIC_INDICATOR } from "../../config.js";
 const users = new Set();
 
 /**
+ * Emails contains all emails
+ */
+const emails = new Set();
+
+/**
  * calculate hash value, pls note the function uses MD5 but can change to any other stronger algorithem such as SHA256 instead
  */
 function hash(message) {
@@ -51,6 +56,10 @@ function scanUsers(directoryPath) {
           file.length - prefix.length - suffix.length
         );
         users.add(id);
+
+        const content= fs.readFileSync(`${directoryPath}/${file}`);
+        const userInfo = JSON.parse(content);
+        emails.add(userInfo.email);
       } catch (error) {
         console.log(error);
       }
@@ -74,7 +83,7 @@ export function signup(req, res) {
   }
 
   const id = getUserId(email, password);
-  if (users.has(id)) {
+  if (emails.has(email) || users.has(id)) {
     res.status(400).send({
       status: "fail",
       id,
@@ -94,6 +103,7 @@ export function signup(req, res) {
     const path = `${config.getDataFolder()}/user${ID_SEPARATOR}${id}.json`;
     fs.writeFileSync(path, JSON.stringify(user));
     users.add(id);
+    emails.add(email);
 
     res.send({
       status: "success",
