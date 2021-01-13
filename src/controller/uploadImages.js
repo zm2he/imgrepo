@@ -35,7 +35,7 @@ export function uploadBinaryImage(req, res) {
       data = Buffer.concat([data, chunk]);
     });
     req.on("end", () => {
-      const descriptor = addImageDescriptor(getUse(req), name, req.query.type);
+      const descriptor = addImageDescriptor(getUser(req), name, req.query.type);
       fs.writeFile(descriptor.path, data, "binary", (error) => {
         if (error) {
           res.status(500).send({
