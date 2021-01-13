@@ -2,7 +2,7 @@
 
 ## Project setup
 ```
-mkdir images
+mkdir data
 npm install
 ```
 
@@ -12,82 +12,165 @@ node server.js
 ```
 
 ### APIs
+The API can be accessed at /api-docs in a running instance of the image repository.
 ```
-GET /images
+POST /signup - create a new user
+Parameters:
+    Body:
+    {
+        "email": "email@email.com",
+        "password": "mypassword"
+    }
 
-POST /images  - upload images as form-data
-Response example:
-{ 
-    "status": "success",
-    "result": [
-        {
-            "id": "RJAQIiompB",
-            "name": "13226983_877277119069903_2754639697391931078_n.jpg",
-            "url": "http://localhost:8080/images/RJAQIiompB"
-        },
-        {
-            "id": "UT4W7nmfH",
-            "name": "13179095_877277149069900_525441892896211067_n.jpg",
-            "url": "http://localhost:8080/images/UT4W7nmfH"
-        }
-    ]
+Sample Response:
+{
+  "status": "success",
+  "id": "4b0cbeafc6266e1bc3b247492fc42d6e",
+  "originalUrl": "/signup"
 }
+```
+```
+GET /images - get list of images in repository available to user
+Parameters:
+    Header: email (string), password (string)
 
-Response example: 
+Sample Response:
+{
+  "status": "success",
+  "originalUrl": "/images",
+  "result": [
+    {
+      "id": "38a3abec3a87cd53246bc56a45c3012cqsLDWFE8t+",
+      "name": "IMG_20190923_095828.jpg",
+      "url": "http://localhost:80/images/38a3abec3a87cd53246bc56a45c3012cqsLDWFE8t+"
+    },
+    {
+      "id": "f5a43c2e9910124d296ebe8519303f86g5CqkjfUH+",
+      "name": "IMG_20190813_110211.jpg",
+      "url": "http://localhost:80/images/f5a43c2e9910124d296ebe8519303f86g5CqkjfUH+"
+    },
+    {
+      "id": "f5a43c2e9910124d296ebe8519303f86hDdZH0IL8",
+      "name": "conceptual.PNG",
+      "url": "http://localhost:80/images/f5a43c2e9910124d296ebe8519303f86hDdZH0IL8"
+    }
+  ]
+}
+```
+```
+POST /images?type={type}  - upload images as form-data
+Parameters:
+    Header: email (string), password (string)
+    Form-Data: images (image files)
+    Path: type ("public" or "private", optional)
+
+Note that the type defaults to "private", including if the type is not valid.
+
+Sample Response:
 {
     "status": "success",
+    "originalUrl": "/images?type=public",
     "message": "images uploaded",
-    "result": [
+    "images": [
         {
-            "id": "UT4W7nmfH",
-            "name": "13179095_877277149069900_525441892896211067_n.jpg",
-            "url": "http://localhost:8080/images/UT4W7nmfH"
+            "id": "f5a43c2e9910124d296ebe8519303f86G4p1KtF_0+",
+            "name": "tmp9.JPG",
+            "url": "http://localhost:80/images/f5a43c2e9910124d296ebe8519303f86G4p1KtF_0+"
         },
         {
-            "id": "RJAQIiompB",
-            "name": "13226983_877277119069903_2754639697391931078_n.jpg",
-            "url": "http://localhost:8080/images/RJAQIiompB"
+            "id": "f5a43c2e9910124d296ebe8519303f86SYyK8_G-I7+",
+            "name": "tmp10.JPG",
+            "url": "http://localhost:80/images/f5a43c2e9910124d296ebe8519303f86SYyK8_G-I7+"
         }
     ]
 }
 
 POST /images/:name  - upload image as binary
-Response example: {
+For example /images/name1.jpg
+
+Parameters:
+    Headers: email (string), password (string)
+    Binary Body: image to be uploaded
+    Path: type ("public" or "private", optional)
+
+Note that the type defaults to "private", including if the type is not valid.
+
+Sample Response:
+{
     "status": "success",
-    "message": "images uploaded",
-    "id": "UT4W7nmfH",
-    "name": "13179095_877277149069900_525441892896211067_n.jpg",
-    "url": "http://localhost:8080/images/UT4W7nmfH"
+    "message": "image uploaded",
+    "originalUrl": "/images/name1.jpg?type=public",
+    "id": "f5a43c2e9910124d296ebe8519303f86M6AlbEVsp+",
+    "name": "name1.jpg",
+    "url": "http://localhost:80/images/f5a43c2e9910124d296ebe8519303f86M6AlbEVsp+"
 }
 
-GET /images/:id - download an image
-GET /images/:id?type=thumbnail - download an image's thumbnail
-DELETE /images/:id
-GET /images/search?q= - search images
+```
+```
+GET /images/:id?type={type} - download an image you are permitted to access
+Parameters:
+    Headers (optional for public image): email (string), password (string)
+    Path: id (string), type ("original" or "thumbnail", optional)
+
+Note that type defaults to "original" including when type is invalid
+```
+```
+DELETE /images/:id - delete an image you created
+Parameters:
+    Headers: email (string), password (string)
+    Path: id (string)
+
+Sample Response:
+{
+  "status": "success",
+  "originalUrl": "/images/f5a43c2e9910124d296ebe8519303f86RY5TShtO3",
+  "name": "1 diagram - Copy.JPG",
+  "message": "image deleted"
+}
+```
+```
+GET /images/search?q={query} - search images
+Parameters:
+    Header: email (string), password (string)
+    Path: q (string)
+
+Sample Response:
+{
+  "status": "success",
+  "originalUrl": "/images/search?q=conc",
+  "result": [
+    {
+      "id": "f5a43c2e9910124d296ebe8519303f86hDdZH0IL8",
+      "name": "conceptual.PNG",
+      "url": "http://localhost:80/images/f5a43c2e9910124d296ebe8519303f86hDdZH0IL8"
+    }
+  ]
+}
 ```
 <br><br>
 
 ## Configurations
-All images are saved in sub-folder /data<br>
-By default the server listens on port number 8080, or whatever specified in environment variable IMGREPO_PORT<br>
-By default the server allows image size up to 10 mega bytes, or the value specified in environment variable: IMGREPO_MAX_IMG_SIZE<br>
+All images are saved in sub-directory /data.<br>
+
+The server listens on port 80 by default, another port can be specified in the environment variable IMGREPO_PORT. <br>
+
+By default the server allows image size up to 10 mega bytes by default, another value can be specified in the environment variable IMGREPO_MAX_IMG_SIZE
 <br><br>
 
 ## Data folder
-The project utilizes local disk folder for saving data which include<br>
+The project utilizes a local disk directory /data for saving data which includes the following:<br>
 ```
-Signed user files:  user$id.json
+Signed user files: user$id.json
 Uploaded image files: img$id$orignalfilename
-Thumbnial image files: thumbnail$id.filextension
+Thumbnail image files: thumbnail$id.filextension
 ```
-
-It should be pretty straight forward to migrate disk-folder implementation to database if needed<br><br>
+It should be straightforward to migrate disk-folder implementation to database if needed.<br><br>
 
 ## User Id and image Id
-A user id is a hash value over (email + password)<br>
-An image id is concatenating of user's id plus a dynamically auto-generated short unique id.<br>
-When user uploads an image, he/she can add an additional parameter "type=public" to make it public searchable/downloadable; unlike a private image, a public image's id ends up with character +<br>
-<br><br>
+A user id is a hash value over (email + password).<br>
+An image id is the user's id plus a dynamically auto-generated short unique id.<br>
+
+When user uploads an image, they can add an additional parameter "type=public" to make it public searchable/downloadable. A public image's id ends with character + while a priate image's id does not.<br><br>
 
 ##  Upload images from Postman
 ### form-data type body

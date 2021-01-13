@@ -1,9 +1,9 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "Shoppies' image repository",
+    "description": "image repository",
     "version": "1.0.210104",
-    "title": "Shoppies' Image Repository",
+    "title": "Image Repository",
     "termsOfService": "http://swagger.io/terms/",
     "contact": {
       "email": "bruce.he.62@gmail.com"

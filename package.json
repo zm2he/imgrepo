@@ -1,7 +1,7 @@
 {
-  "name": "shoppies-image-repo",
+  "name": "image-repo",
   "version": "1.0.0",
-  "description": "Shoppies' image repository",
+  "description": "image repository",
   "main": "server.js",
   "type": "module",
   "scripts": {
