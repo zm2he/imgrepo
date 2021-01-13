@@ -36,18 +36,8 @@ export async function downloadImage(req, res) {
       });
     return;
   }
-  const type = req.query?.type || "original";
-  if (type !== "original" && type !== "thumbnail") {
-    res
-      .status(400)
-      .send({
-        status: "fail",
-        originalUrl: req.originalUrl,
-        message: "bad request, type must be either original or thumbnail",
-      });
-    return;
-  }
-
+  
+  const type = req.query?.type === 'thumbnail'? 'thumbnail':'original';
   const { originalname, path } = descriptor;
   if (originalname.endsWith(".png")) {
     res.setHeader("Content-type", "image/png");

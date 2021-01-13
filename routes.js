@@ -7,7 +7,7 @@
 
 import fs from "fs";
 import swaggerUI from "swagger-ui-express";
-import config from './config.js';
+import config, { PUBLIC_INDICATOR } from "./config.js";
 import { signup, validateReq } from "./src/controller/users.js";
 import { getImageList } from "./src/controller/getImageList.js";
 import { downloadImage } from "./src/controller/downloadImage.js";
@@ -75,15 +75,23 @@ export function setupRoutes(app) {
   );
 
   app.post("/signup", signup);
-  app.get("/images/:id", (req, res) =>
-    validateUserAndExecute(req, res, (req, res) => {
-      if (req.params.id === "search") {
-        searchImages(req, res);
-      } else {
-        downloadImage(req, res);
-      }
-    })
-  );
+  app.get("/images/:id", (req, res) => {
+    const id = req.params.id;
+    const isSearch = id === "search";
+    if (!isSearch && id.endsWith(PUBLIC_INDICATOR)) {
+      // no permission required to download a public image
+      downloadImage(req, res);
+    } else {
+      validateUserAndExecute(req, res, (req, res) => {
+        if (req.params.id === "search") {
+          searchImages(req, res);
+        } else {
+          downloadImage(req, res);
+        }
+      });
+    }
+  });
+
   app.get("/images", (req, res) =>
     validateUserAndExecute(req, res, getImageList)
   );

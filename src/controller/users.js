@@ -146,7 +146,7 @@ export function getUser(req) {
 export function isImageDownloadable(user, id) {
   return (
     id?.endsWith(PUBLIC_INDICATOR) || // is it a public image?
-    id?.startsWith(user.id)
+    id?.startsWith(user?.id)
   ); // is it a user uploaded image?
 }
 
@@ -155,7 +155,7 @@ export function isImageDownloadable(user, id) {
  */
 export function isImageDeletable(user, id) {
   // only the user who uploaded the image can delete the image
-  return id?.startsWith(user.id);
+  return id?.startsWith(user?.id);
 }
 
 // load users from file to memory
