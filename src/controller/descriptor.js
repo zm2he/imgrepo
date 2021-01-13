@@ -111,7 +111,7 @@ export function deleteImageDescriptor(id) {
     imageDescriptors.delete(id);
 
     // delete the generated image thumbnail if exists
-    const thumbnailPath = getImageThumbnialPath(descriptor);
+    const thumbnailPath = getImageThumbnailPath(descriptor);
     fs.unlink(thumbnailPath, (error) => {
       if (error) {
         console.log(error);
@@ -125,7 +125,7 @@ export function deleteImageDescriptor(id) {
  * a thumbnail has the same file extension as the original image file
  * @param {} descriptor
  */
-function getImageThumbnialPath(descriptor) {
+function getImageThumbnailPath(descriptor) {
   const { id, path } = descriptor;
   const index = path.lastIndexOf(".");
   if (index !== -1) {
@@ -136,12 +136,12 @@ function getImageThumbnialPath(descriptor) {
 }
 
 /**
- * generate an image's thumbnail, return the generated image thumbnial file path
+ * generate an image's thumbnail, return the generated image thumbnail file path
  * @param {*} descriptor
  */
 export async function generateImageThumbnail(descriptor) {
   try {
-    const thumbnailPath = getImageThumbnialPath(descriptor);
+    const thumbnailPath = getImageThumbnailPath(descriptor);
     if (fs.existsSync(thumbnailPath)) {
       // return an already generated image thumbnail
       return thumbnailPath;
