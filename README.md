@@ -68,7 +68,7 @@ GET /images/search?q= - search images
 <br><br>
 
 ## Configurations
-All images are saved in sub-folder /images<br>
+All images are saved in sub-folder /data<br>
 By default the server listens on port number 8080, or whatever specified in environment variable IMGREPO_PORT<br>
 By default the server allows image size up to 10 mega bytes, or the value specified in environment variable: IMGREPO_MAX_IMG_SIZE<br>
 <br><br>
