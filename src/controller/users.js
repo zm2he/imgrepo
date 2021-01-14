@@ -128,6 +128,33 @@ export function signup(req, res) {
   }
 }
 
+export function login(req, res) {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    res.status(400).send({
+      status: "fail",
+      originalUrl: req.originalUrl,
+      message: "bad request, body contains no email/or password",
+    });
+    return;
+  }
+
+  const id = getUserId(email, password);
+  if (emails.has(email) && users.has(id)) {
+    res.send({
+      status: "success",
+      id,
+      originalUrl: req.originalUrl,
+    });
+  } else {
+    res.status(500).send({
+      status: "fail",
+      originalUrl: req.originalUrl,
+      error: "user does not exist",
+    });
+  }
+}
+
 /**
  * a validated request's header must contain email and password
  * @param {*} req

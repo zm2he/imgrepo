@@ -8,7 +8,7 @@
 import fs from "fs";
 import swaggerUI from "swagger-ui-express";
 import config, { PUBLIC_INDICATOR } from "./config.js";
-import { signup, validateReq } from "./src/controller/users.js";
+import { signup, login, validateReq } from "./src/controller/users.js";
 import { getImageList } from "./src/controller/getImageList.js";
 import { downloadImage } from "./src/controller/downloadImage.js";
 import { deleteImage } from "./src/controller/deleteImage.js";
@@ -66,6 +66,7 @@ export function setupRoutes(app) {
     res.send({
       swagger: "GET /api-docs",
       signup: "POST /signup",
+      login: "POST /login",
       getList: "GET /images",
       search: "GET /images/search?q=x",
       upload: "POST /images[?type=public|private]",
@@ -75,6 +76,7 @@ export function setupRoutes(app) {
   );
 
   app.post("/signup", signup);
+  app.post("/login", login);
   app.get("/images/:id", (req, res) => {
     const id = req.params.id;
     const isSearch = id === "search";

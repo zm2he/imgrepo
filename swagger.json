@@ -48,6 +48,37 @@
         }
       }
     },
+    "/login": {
+      "post": {
+        "summary": "login",
+        "tags": ["API"],
+        "description": "",
+        "operationId": "login",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "user credential",
+            "description": "user's email and password",
+            "in": "body",
+            "schema": {
+              "$ref": "#definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "500": {
+            "description": "internal error"
+          }
+        }
+      }
+    },
     "/images?type={type}": {
       "post": {
         "summary": "uploads an image",
