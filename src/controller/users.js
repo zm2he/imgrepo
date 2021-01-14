@@ -57,7 +57,7 @@ function scanUsers(directoryPath) {
         );
         users.add(id);
 
-        const content= fs.readFileSync(`${directoryPath}/${file}`);
+        const content = fs.readFileSync(`${directoryPath}/${file}`);
         const userInfo = JSON.parse(content);
         emails.add(userInfo.email);
       } catch (error) {
@@ -83,13 +83,22 @@ export function signup(req, res) {
   }
 
   const id = getUserId(email, password);
-  if (emails.has(email) || users.has(id)) {
-    res.status(400).send({
-      status: "fail",
-      id,
-      originalUrl: req.originalUrl,
-      message: "user already signed up",
-    });
+  if (emails.has(email)) {
+    if (users.has(id)) {
+      res.send({
+        status: "success",
+        id,
+        originalUrl: req.originalUrl,
+        message: "user already signed up",
+      });
+    } else {
+      res.status(400).send({
+        status: "fail",
+        id,
+        originalUrl: req.originalUrl,
+        message: "user signed up with different password",
+      });
+    }
     return;
   }
 
