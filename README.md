@@ -167,7 +167,7 @@ Thumbnail image files: thumbnail$id.filextension
 It should be straightforward to migrate disk-folder implementation to database if needed.<br><br>
 
 ## User Id and image Id
-A user id is a hash value over (email + password).<br>
+A user id is a hash value over user's email.<br>
 An image id is the user's id plus a dynamically auto-generated short unique id.<br>
 
 When user uploads an image, they can add an additional parameter "type=public" to make it public searchable/downloadable. A public image's id ends with character + while a priate image's id does not.<br><br>
