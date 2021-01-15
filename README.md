@@ -1,4 +1,5 @@
 # Node.js Express Image Repo Server
+The server can be found at http://52.73.210.69 currently, and the Swagger API endpoint at http://52.73.210.69/api-docs .
 
 ## Project setup
 ```
