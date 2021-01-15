@@ -16,8 +16,6 @@
  
 const port = process.env.IMGREPO_PORT || 80;
 const config = {
-  version: "1.0.201219",
-
   port,
   baseUrl: `http://localhost:${port}`,
 

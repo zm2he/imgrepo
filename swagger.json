@@ -2,15 +2,10 @@
   "swagger": "2.0",
   "info": {
     "description": "image repository",
-    "version": "1.0.210104",
+    "version": "1.0.210114",
     "title": "Image Repository",
-    "termsOfService": "http://swagger.io/terms/",
     "contact": {
       "email": "bruce.he.62@gmail.com"
-    },
-    "license": {
-      "name": "Apache 2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
   "host": "imgrepo.io",
@@ -81,7 +76,7 @@
     },
     "/images?type={type}": {
       "post": {
-        "summary": "uploads an image",
+        "summary": "upload images",
         "tags": ["API"],
         "description": "",
         "operationId": "uploadImage",
@@ -258,7 +253,7 @@
 
     "/images/search?q={q}": {
       "get": {
-        "summary": "search images",
+        "summary": "search images by name",
         "tags": ["API"],
         "description": "",
         "operationId": "searchImage",

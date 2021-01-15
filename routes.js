@@ -38,7 +38,6 @@ export function setupSwagger(app) {
   const baseUrl = config.baseUrl;
   const index = baseUrl.indexOf("://");
   if (index !== -1) {
-    swagger.info.version = config.version;
     swagger.host = baseUrl.substr(index + 3);
     swagger.schemes = [baseUrl.substr(0, index)];
   }

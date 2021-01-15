@@ -181,6 +181,11 @@ Binary is designed to send the information in a format that cannot be entered ma
 Please note image name must be specified in the route<br>
 <br><img src="public/binary-data.png" /><br><br>
 
+## Test APIs by Swagger
+Alternatively you may use the builtin swagger endpoint "/api-docs" to test it
+<br><img src="public/imgrepo-swagger.png" /><br><br>
+
+
 ## References
 [1] [How to upload files in Node.js and Express](https://attacomsian.com/blog/uploading-files-nodejs-express)<br>
 [2] [Express File Upload with Multer in Node.js](https://attacomsian.com/blog/express-file-upload-multer)<br>
