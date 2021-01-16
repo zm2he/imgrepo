@@ -302,13 +302,13 @@
         "email": {
           "type": "string",
           "description": "User's email",
-          "example": "bruce.he.62@gmail.com"
+          "example": "guest@gmail.com"
         },
         "password": {
           "type": "string",
           "format": "password",
           "description": "User's password",
-          "example": "mypassword"
+          "example": "password"
         }
       }
     }

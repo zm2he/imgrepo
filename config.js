@@ -17,7 +17,7 @@
 const port = process.env.IMGREPO_PORT || 80;
 const config = {
   port,
-  baseUrl: `http://localhost:${port}`,
+  baseUrl: `http://52.73.210.69:${port}`,
 
   appFolder: ".",
 
@@ -30,8 +30,8 @@ const config = {
   },
 
   getImagePlaceholder() {
-    return this.appFolder + '/public/image-placeholder.png'
-  }
+    return this.appFolder + "/public/image-placeholder.png";
+  },
 };
 
 config.appFolder = process.cwd();
