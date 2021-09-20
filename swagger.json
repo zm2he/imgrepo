@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "description": "image repository",
-    "version": "1.0.210114",
+    "version": "1.0.210919",
     "title": "Image Repository",
     "contact": {
       "email": "bruce.he.62@gmail.com"
@@ -25,8 +25,19 @@
             "name": "user credential",
             "description": "user's email and password",
             "in": "body",
-            "schema": {
-              "$ref": "#definitions/User"
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "example": "guest@gmail.com"
+              },
+              "password": {
+                "type": "string",
+                "format": "password",
+                "description": "User's password",
+                "example": "password"
+              }
             }
           }
         ],
@@ -56,8 +67,19 @@
             "name": "user credential",
             "description": "user's email and password",
             "in": "body",
-            "schema": {
-              "$ref": "#definitions/User"
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "example": "guest@gmail.com"
+              },
+              "password": {
+                "type": "string",
+                "format": "password",
+                "description": "User's password",
+                "example": "password"
+              }
             }
           }
         ],
@@ -290,25 +312,6 @@
           "500": {
             "description": "internal error"
           }
-        }
-      }
-    }
-  },
-  "definitions": {
-    "User": {
-      "required": ["email", "password"],
-      "type": "object",
-      "properties": {
-        "email": {
-          "type": "string",
-          "description": "User's email",
-          "example": "guest@gmail.com"
-        },
-        "password": {
-          "type": "string",
-          "format": "password",
-          "description": "User's password",
-          "example": "password"
         }
       }
     }
