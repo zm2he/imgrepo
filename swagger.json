@@ -12,7 +12,7 @@
   "basePath": "/",
   "schemes": ["https", "http"],
   "paths": {
-    "/signup": {
+    "/api/signup": {
       "post": {
         "summary": "sign up",
         "tags": ["API"],
@@ -43,7 +43,7 @@
         }
       }
     },
-    "/login": {
+    "/api/login": {
       "post": {
         "summary": "login",
         "tags": ["API"],
@@ -74,7 +74,7 @@
         }
       }
     },
-    "/images?type={type}": {
+    "/api/images?type={type}": {
       "post": {
         "summary": "upload images",
         "tags": ["API"],
@@ -124,7 +124,7 @@
         }
       }
     },
-    "/images": {
+    "/api/images": {
       "get": {
         "summary": "get image list",
         "tags": ["API"],
@@ -159,7 +159,7 @@
         }
       }
     },
-    "/images/{id}?type={type}": {
+    "/api/images/{id}?type={type}": {
       "get": {
         "summary": "download an image",
         "tags": ["API"],
@@ -208,7 +208,7 @@
         }
       }
     },
-    "/images/{id}": {
+    "/api/images/{id}": {
       "delete": {
         "summary": "delete an image",
         "tags": ["API"],
@@ -251,7 +251,7 @@
       }
     },
 
-    "/images/search?q={q}": {
+    "/api/images/search?q={q}": {
       "get": {
         "summary": "search images by name",
         "tags": ["API"],

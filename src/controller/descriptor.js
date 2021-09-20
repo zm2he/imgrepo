@@ -53,7 +53,7 @@ function scanImages(directoryPath) {
         id,
         originalname,
         path: `${directoryPath}/${file}`,
-        url: `${config.baseUrl}/images/${id}`,
+        url: `${config.baseUrl}/api/images/${id}`,
       });
     });
   });
@@ -80,7 +80,7 @@ export function addImageDescriptor(user, originalname, type='private') {
       id,
       originalname,
       path: `${config.getDataFolder()}/img${ID_SEPARATOR}${id}${ID_SEPARATOR}${originalname}`,
-      url: `${config.baseUrl}/images/${id}`,
+      url: `${config.baseUrl}/api/images/${id}`,
     };
     imageDescriptors.set(id, descriptor);
     return descriptor;

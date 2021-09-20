@@ -64,19 +64,19 @@ export function setupRoutes(app) {
   app.get("/help", (req, res) =>
     res.send({
       swagger: "GET /api-docs",
-      signup: "POST /signup",
-      login: "POST /login",
-      getList: "GET /images",
-      search: "GET /images/search?q=x",
-      upload: "POST /images[?type=public|private]",
-      get: "GET /images/:id[?type=original|thumbnail]",
-      delete: "DELETE /images:id",
+      signup: "POST /api/signup",
+      login: "POST /api/login",
+      getList: "GET /api/images",
+      search: "GET /api/images/search?q=x",
+      upload: "POST /api/images[?type=public|private]",
+      get: "GET /api/images/:id[?type=original|thumbnail]",
+      delete: "DELETE /api/images:id",
     })
   );
 
-  app.post("/signup", signup);
-  app.post("/login", login);
-  app.get("/images/:id", (req, res) => {
+  app.post("/api/signup", signup);
+  app.post("/api/login", login);
+  app.get("/api/images/:id", (req, res) => {
     const id = req.params.id;
     const isSearch = id === "search";
     if (!isSearch && id.endsWith(PUBLIC_INDICATOR)) {
@@ -93,16 +93,16 @@ export function setupRoutes(app) {
     }
   });
 
-  app.get("/images", (req, res) =>
+  app.get("/api/images", (req, res) =>
     validateUserAndExecute(req, res, getImageList)
   );
-  app.delete("/images/:id", (req, res) =>
+  app.delete("/api/images/:id", (req, res) =>
     validateUserAndExecute(req, res, deleteImage)
   );
-  app.post("/images", (req, res) =>
+  app.post("/api/images", (req, res) =>
     validateUserAndExecute(req, res, uploadFormImages)
   );
-  app.post("/images/:name", (req, res) =>
+  app.post("/api/images/:name", (req, res) =>
     validateUserAndExecute(req, res, uploadBinaryImage)
   );
 }
