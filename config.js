@@ -11,14 +11,13 @@
  *     IMGREPO_MAX_IMG_SIZE - maximum allowed image size in bytes, maximum is 10m
  */
 
- export const ID_SEPARATOR = '$';
- export const PUBLIC_INDICATOR = '+';
- 
-const port = process.env.IMGREPO_PORT || 80;
+export const ID_SEPARATOR = "$";
+export const PUBLIC_INDICATOR = "+";
+
+const port = process.env.IMGREPO_PORT || 8080;
 const config = {
   port,
-  baseUrl: `http://52.73.210.69:${port}`,
-
+  baseUrl: `http://35.173.93.67:${port}`,
   appFolder: ".",
 
   // maximum allowed image size, 10m by default

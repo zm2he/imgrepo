@@ -1,5 +1,5 @@
 # Node.js Express Image Repo Server
-The server can be found at http://52.73.210.69 currently, and the Swagger API endpoint at http://52.73.210.69/api-docs .
+The server can be found at [here](http://35.173.93.67:8080) currently, and the Swagger API endpoint at [here](http://35.173.93.67:8080/api-docs) .
 
 ## Project setup
 ```
@@ -19,8 +19,8 @@ POST /signup - create a new user
 Parameters:
     Body:
     {
-        "email": "email@email.com",
-        "password": "mypassword"
+        "email": "guest@email.com",
+        "password": "password"
     }
 
 Sample Response:
@@ -43,17 +43,17 @@ Sample Response:
     {
       "id": "38a3abec3a87cd53246bc56a45c3012cqsLDWFE8t+",
       "name": "IMG_20190923_095828.jpg",
-      "url": "http://localhost:80/images/38a3abec3a87cd53246bc56a45c3012cqsLDWFE8t+"
+      "url": "http://35.173.93.67:8080/images/38a3abec3a87cd53246bc56a45c3012cqsLDWFE8t+"
     },
     {
       "id": "f5a43c2e9910124d296ebe8519303f86g5CqkjfUH+",
       "name": "IMG_20190813_110211.jpg",
-      "url": "http://localhost:80/images/f5a43c2e9910124d296ebe8519303f86g5CqkjfUH+"
+      "url": "http://35.173.93.67:8080/images/f5a43c2e9910124d296ebe8519303f86g5CqkjfUH+"
     },
     {
       "id": "f5a43c2e9910124d296ebe8519303f86hDdZH0IL8",
       "name": "conceptual.PNG",
-      "url": "http://localhost:80/images/f5a43c2e9910124d296ebe8519303f86hDdZH0IL8"
+      "url": "http://35.173.93.67:8080/images/f5a43c2e9910124d296ebe8519303f86hDdZH0IL8"
     }
   ]
 }
@@ -76,12 +76,12 @@ Sample Response:
         {
             "id": "f5a43c2e9910124d296ebe8519303f86G4p1KtF_0+",
             "name": "tmp9.JPG",
-            "url": "http://localhost:80/images/f5a43c2e9910124d296ebe8519303f86G4p1KtF_0+"
+            "url": "http://35.173.93.67:8080/images/f5a43c2e9910124d296ebe8519303f86G4p1KtF_0+"
         },
         {
             "id": "f5a43c2e9910124d296ebe8519303f86SYyK8_G-I7+",
             "name": "tmp10.JPG",
-            "url": "http://localhost:80/images/f5a43c2e9910124d296ebe8519303f86SYyK8_G-I7+"
+            "url": "http://35.173.93.67:8080/images/f5a43c2e9910124d296ebe8519303f86SYyK8_G-I7+"
         }
     ]
 }
@@ -103,7 +103,7 @@ Sample Response:
     "originalUrl": "/images/name1.jpg?type=public",
     "id": "f5a43c2e9910124d296ebe8519303f86M6AlbEVsp+",
     "name": "name1.jpg",
-    "url": "http://localhost:80/images/f5a43c2e9910124d296ebe8519303f86M6AlbEVsp+"
+    "url": "http://35.173.93.67:8080/images/f5a43c2e9910124d296ebe8519303f86M6AlbEVsp+"
 }
 
 ```
@@ -143,7 +143,7 @@ Sample Response:
     {
       "id": "f5a43c2e9910124d296ebe8519303f86hDdZH0IL8",
       "name": "conceptual.PNG",
-      "url": "http://localhost:80/images/f5a43c2e9910124d296ebe8519303f86hDdZH0IL8"
+      "url": "http://35.173.93.67:8080/images/f5a43c2e9910124d296ebe8519303f86hDdZH0IL8"
     }
   ]
 }
@@ -171,7 +171,7 @@ It should be straightforward to migrate disk-folder implementation to database i
 A user id is a hash value over user's email.<br>
 An image id is the user's id plus a dynamically auto-generated short unique id.<br>
 
-When user uploads an image, they can add an additional parameter "type=public" to make it public searchable/downloadable. A public image's id ends with character + while a priate image's id does not.<br><br>
+When user uploads an image, they can add an additional parameter "type=public" to make it public searchable/downloadable. A public image's id ends with character + while a private image's id does not.<br><br>
 
 ##  Upload images from Postman
 ### form-data type body
@@ -194,4 +194,6 @@ Alternatively you may use the builtin swagger endpoint "/api-docs" to test it
 [4] [React file upload: proper and easy way, with NodeJS!](https://programmingwithmosh.com/javascript/react-file-upload-proper-server-side-nodejs-easy/) <br>
 [5] [How to upload files in React with NodeJS & Express](https://reactgo.com/react-file-upload/)<br>
 [6] [How to deploy a node.js application on aws ec2 server](https://ourcodeworld.com/articles/read/977/how-to-deploy-a-node-js-application-on-aws-ec2-server)<br>
-[7] [AWS npm install failed](https://stackoverflow.com/questions/54096891/npm-install-fails-on-ubuntu-18-04-with-error-failed-at-the-bcrypt3-0-3-insta)
+[7] [AWS npm install failed](https://stackoverflow.com/questions/54096891/npm-install-fails-on-ubuntu-18-04-with-error-failed-at-the-bcrypt3-0-3-insta)<br>
+[8] [AWS how to associate a static public IP to running](https://aws.amazon.com/premiumsupport/knowledge-center/ec2-associate-static-public-ip/)
+[9] [pm2 cheat sheet](https://devhints.io/pm2)
