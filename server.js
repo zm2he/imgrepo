@@ -32,8 +32,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use((req, res, next) => {
-  console.log(`received ${req.method} ${req.originalUrl}`);
-  next();
+  const originalUrl = req.originalUrl;
+  if (originalUrl.startsWith("/api-docs") || originalUrl.startsWith("/api/")) {
+    console.log(`received ${req.method} ${originalUrl}`);
+    next();
+  } else {
+    let fileName = originalUrl;
+    if (fileName === "/") fileName = "index.html";
+    res.sendFile(`${config.appFolder}/public/web/${fileName}`);
+  }
 });
 setupRoutes(app);
 setupSwagger(app);
